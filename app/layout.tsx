@@ -24,9 +24,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={poppins.className}>
       <body className="bg-gray-950 text-white">
-        <main className="min-h-screen flex flex-col items-center">
-          {children}
-        </main>
+        {children}
       </body>
     </html>
   )

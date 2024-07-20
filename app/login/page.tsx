@@ -8,7 +8,7 @@ export default function Login({
   searchParams: { mensaje: string };
 }) {
   return (
-    <div className="flex-1 flex flex-col w-full px-4 md:px-0 max-w-md justify-center items-center gap-2">
+    <div className="h-dvh flex items-center justify-center w-full px-4 md:px-0 max-w-md gap-2 mx-auto">
       <Link
         href="/"
         className="absolute text-gray-200 left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center text-sm group lg:hover:text-white lg:transition-colors"
