@@ -1,61 +1,17 @@
-import Link from "next/link";
-import { headers } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import { SubmitButton } from "./submit-button";
+import Link from "next/link"
+import { SubmitButton } from "../../components/common/submit-button"
+import { signIn, signUp } from "@/server-actions/auth"
 
 export default function Login({
-  searchParams,
+  searchParams
 }: {
-  searchParams: { message: string };
+  searchParams: { mensaje: string };
 }) {
-  const signIn = async (formData: FormData) => {
-    "use server";
-
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const supabase = createClient();
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      return redirect("/login?message=Could not authenticate user");
-    }
-
-    return redirect("/protected");
-  };
-
-  const signUp = async (formData: FormData) => {
-    "use server";
-
-    const origin = headers().get("origin");
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const supabase = createClient();
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${origin}/auth/callback`,
-      },
-    });
-
-    if (error) {
-      return redirect("/login?message=Could not authenticate user");
-    }
-
-    return redirect("/login?message=Check email to continue sign in process");
-  };
-
   return (
-    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
+    <div className="flex-1 flex flex-col w-full px-4 md:px-0 max-w-md justify-center items-center gap-2">
       <Link
         href="/"
-        className="absolute left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
+        className="absolute text-gray-200 left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center text-sm group lg:hover:text-white lg:transition-colors"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -67,28 +23,28 @@ export default function Login({
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1"
+          className="mr-1 h-4 w-4 group-hover:stroke-white lg:transition-colors"
         >
           <polyline points="15 18 9 12 15 6" />
         </svg>{" "}
-        Back
+        Atrás
       </Link>
 
       <form className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
-        <label className="text-md" htmlFor="email">
-          Email
+        <label className="text-white" htmlFor="email">
+          Correo
         </label>
         <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
+          className="rounded-md px-4 py-2 bg-inherit border border-gray-100 mb-6 text-gray-200"
           name="email"
-          placeholder="you@example.com"
+          placeholder="tunombre@ejemplo.com"
           required
         />
-        <label className="text-md" htmlFor="password">
-          Password
+        <label className="text-white" htmlFor="password">
+          Contraseña
         </label>
         <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
+          className="rounded-md px-4 py-2 bg-inherit border border-gray-100 mb-6 text-gray-200"
           type="password"
           name="password"
           placeholder="••••••••"
@@ -96,24 +52,24 @@ export default function Login({
         />
         <SubmitButton
           formAction={signIn}
-          className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2"
-          pendingText="Signing In..."
+          className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2 lg:hover:bg-green-800 lg:transition-colors"
+          pendingText="Iniciando sesión..."
         >
-          Sign In
+          Iniciar sesión
         </SubmitButton>
         <SubmitButton
           formAction={signUp}
-          className="border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2"
-          pendingText="Signing Up..."
+          className="border border-gray-100 text-gray-100 rounded-md px-4 py-2 text-foreground lg:hover:bg-gray-100 lg:hover:text-gray-950 lg:transition-colors"
+          pendingText="Creando cuenta..."
         >
-          Sign Up
+          Crear cuenta
         </SubmitButton>
-        {searchParams?.message && (
-          <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
-            {searchParams.message}
+        {searchParams?.mensaje && (
+          <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center text-gray-200">
+            {searchParams.mensaje}
           </p>
         )}
       </form>
     </div>
-  );
+  )
 }
