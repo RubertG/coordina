@@ -12,7 +12,7 @@ export const getProjects = async () => {
   const { data: projects, error } = await supabase
     .from("Proyecto")
     .select("*")
-    .eq("id_usuario",user.id)
+    .eq("id_usuario", user.id)
 
   if (error) return {
     error: "Error al obtener los proyectos",
