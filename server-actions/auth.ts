@@ -39,5 +39,11 @@ export const signUp = async (formData: FormData) => {
     return redirect("/login?mensaje=Error al registrar el usuario")
   }
 
+  const { error: insertError } = await supabase.from("Usuario").insert({ correo: email })
+
+  if (insertError) {
+    return redirect("/login?mensaje=Error al registrar el usuario")
+  }
+
   return redirect("/login?mensaje=Chequea tu correo para confirmar tu cuenta")
 }
