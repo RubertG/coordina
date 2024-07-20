@@ -14,7 +14,7 @@ export const CreateWorker = async ({ formData}: TechnologyAction ) => {
     error: "No hay un usuario autenticado"
   }
 
-  const { error: errorTech,data } = await supabase
+  const { error: errorTech } = await supabase
     .from("Tecnologia")
     .insert({
       nombre: name

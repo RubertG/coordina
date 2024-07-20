@@ -7,7 +7,6 @@ export const getTechnologies = async () => {
     .from("Tecnologia")
     .select("*")
    
-
   if (error) return {
     error: "Error al obtener las tecnologias",
     technologies
