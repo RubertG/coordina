@@ -38,15 +38,14 @@ export const EditWorker = async (id: string, { formData, technologies }: WorkerA
         }
     })
 
-    await Promise.all(t.map(async (Technology) => {
-        const { error: errorWorkerTechnologies } = await supabase
-            .from("Trabajador_tecnologia")
-            .update(Technology).eq("id_trabajador", data.id)
+    const { error: errorWorkerTechnologies } = await supabase
+        .from("Trabajador_tecnologia")
+        .insert(t)
 
         if (errorWorkerTechnologies) return {
-            error: "Error al crear las tecnologías del trabajador"
+            error: "Error al actualizar las tecnologías del trabajador"
         }
-    }))
+
 
     return redirect("/trabajadores")
 }
