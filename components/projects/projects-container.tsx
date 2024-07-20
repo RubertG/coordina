@@ -1,4 +1,4 @@
-import { getProjects } from "@/utils/supabase/get-projects"
+import { getProjects} from "@/utils/supabase/get-projects"
 import Link from "next/link"
 import { ExternalLinkIcon } from "../common/icons"
 
