@@ -3,12 +3,13 @@
 import { signOut } from "@/utils/supabase/sign-out"
 import clsx from "clsx"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
 
 export function Nav() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
 
   return (
     <nav
@@ -50,7 +51,10 @@ export function Nav() {
           </li>
           <li>
             <button
-              onClick={signOut}
+              onClick={async () => {
+                await signOut()
+                router.refresh()
+              }}
               className="block py-2 px-3 lg:py-1 w-full border-b border-gray-900 lg:border-gray-950 lg:border-x lg:border-t lg:hover:border-gray-200 lg:rounded-lg lg:transition-all">
               Cerrar sesión
             </button>
