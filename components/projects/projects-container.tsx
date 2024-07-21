@@ -1,6 +1,8 @@
 import { getProjects} from "@/utils/supabase/get-projects"
 import Link from "next/link"
 import { ExternalLinkIcon } from "../common/icons"
+import { getBestWorkers } from "@/utils/supabase/best-workers"
+import { getProject } from "@/utils/supabase/get-project"
 
 export const ProjectsContainer = async ({ className }: { className?: string }) => {
   const { error, projects } = await getProjects()
@@ -10,6 +12,12 @@ export const ProjectsContainer = async ({ className }: { className?: string }) =
       <p className="text-gray-200 text-center">Error al obtener los proyectos :(</p>
     </section>
   )
+
+  const {project} = await getProject(projects[0].id)
+  if (project?.tecnologias) {
+    const bestWorkers = await getBestWorkers(project.tecnologias, projects[0].id)
+    console.log(bestWorkers)
+  }
 
   return (
     <section className={`flex flex-col gap-1 mx-auto max-w-3xl ${className}`}>
