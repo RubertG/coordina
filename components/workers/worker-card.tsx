@@ -34,7 +34,7 @@ export const WorkerCard = ({
       })}>
         <p className="text-gray-300">Eliminando...</p>
       </div>
-      <div>
+      <div className="overflow-hidden">
         <h2 className="text-gray-200 font-bold text-lg text-ellipsis overflow-hidden whitespace-nowrap">{worker.nombre}</h2>
         <p className="text-gray-300 text-sm text-ellipsis overflow-hidden whitespace-nowrap">{worker.enfoque}</p>
       </div>

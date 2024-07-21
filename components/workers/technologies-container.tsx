@@ -1,92 +1,35 @@
+"use client"
+
 import { Technologies } from "@/types/worker"
 import { Popup } from "../common/popup"
-import { useEffect, useState } from "react"
-import { Database } from "@/types/db/supabase"
-import { getTechnologies } from "@/utils/supabase/get-technologies"
-import { Plus, Selector, Trash } from "../common/icons"
+import { Plus, Selector } from "../common/icons"
+import { TechnologyCard } from "./technology-card"
+import { useTechnologies } from "@/hooks/worker/use-technologies"
 
 interface Props {
   className?: string
   technologies: Technologies[]
   setTechnologies: React.Dispatch<React.SetStateAction<Technologies[]>>
+  defaultTech?: Technologies[]
+  setDefaultTech?: React.Dispatch<React.SetStateAction<Technologies[]>>
+  idWorker?: string
 }
+
 export const TechnologiesContainer = ({
-  setTechnologies, technologies, className
+  setTechnologies, technologies, className,
+  defaultTech, setDefaultTech, idWorker
 }: Props) => {
-  const [popup, setPopup] = useState(false)
-  const [techs, setTechs] = useState<Database["public"]["Tables"]["Tecnologia"]["Row"][]>()
-  const [data, setData] = useState<Omit<Technologies, "name">>({
-    id: "",
-    experience: 0
+  const {
+    error, handleChange, handlePopup,
+    handleDelete, handleDeleteDefaultTech, handleCreateTechnology,
+    popup, techs
+  } = useTechnologies({
+    setTechnologies,
+    technologies,
+    defaultTech,
+    setDefaultTech,
+    idWorker
   })
-  const [error, setError] = useState<string>("")
-
-  useEffect(() => {
-    const fetchTechnologies = async () => {
-      const { technologies: t, error } = await getTechnologies()
-
-      if (error || !t) return setTechs([])
-
-      setTechs(t)
-    }
-
-    fetchTechnologies()
-  }, [])
-
-  const handlePopup = () => {
-    setError("")
-    setPopup(!popup)
-  }
-
-  const handleCreateTechnology = async () => {
-    if (!techs) {
-      setError("Error al obtener las tecnologías")
-      return
-    }
-
-    if (!data.id) {
-      setError("Debes seleccionar una tecnología")
-      return
-    }
-
-    if (!data.experience) {
-      setError("Debes colocar la experiencia")
-      return
-    }
-
-    if (data.experience < 0) {
-      setError("La experiencia no puede ser negativa o cero")
-      return
-    }
-
-    const newTech = techs.find((technology) => technology.id === data.id)
-
-    if (!newTech) {
-      setError("Error al guardar la tecnología")
-      return
-    }
-
-    setTechnologies([
-      ...technologies, {
-        id: newTech.id,
-        name: newTech.nombre,
-        experience: data.experience
-      }
-    ])
-    setPopup(false)
-    setError("")
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setData({
-      ...data,
-      [e.target.name]: e.target.value
-    })
-  }
-
-  const handleDelete = (id: string) => {
-    setTechnologies(technologies.filter((technology) => technology.id !== id))
-  }
 
   return (
     <section className={`${className}`}>
@@ -105,20 +48,16 @@ export const TechnologiesContainer = ({
       </div>
       <ul className="flex flex-col gap-2">
         {
+          defaultTech?.map((technology) => (
+            <li key={technology.id}>
+              <TechnologyCard handleDelete={handleDeleteDefaultTech} technology={technology} />
+            </li>
+          ))
+        }
+        {
           technologies?.map((technology) => (
             <li key={technology.id}>
-              <button
-                className="relative flex gap-4 items-center justify-between px-3 py-1.5 rounded-lg lg:hover:bg-gray-900 lg:transition-colors border border-gray-950 lg:hover:border-gray-200 overflow-hidden w-full"
-                type="button"
-                onClick={() => handleDelete(technology.id)}
-              >
-                <p className="text-gray-200 font-bold text-lg text-ellipsis overflow-hidden whitespace-nowrap">{technology.name}</p>
-                <p className="text-gray-300 text-sm text-ellipsis overflow-hidden whitespace-nowrap">{technology.experience} meses de experiencia</p>
-                
-                <div className="absolute z-50 w-full h-full left-0 top-0 bg-gray-950/95 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                  <Trash className="text-gray-300" />
-                </div>
-              </button>
+              <TechnologyCard handleDelete={handleDelete} technology={technology} />
             </li>
           ))
         }

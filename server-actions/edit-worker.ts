@@ -4,7 +4,7 @@ import { WorkerAction } from "@/types/worker"
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
 
-export const EditWorker = async (id: string, { formData, technologies }: WorkerAction) => {
+export const editWorker = async (id: string, { formData, technologies }: WorkerAction) => {
   const name = formData.get("name") as string
   const approach = formData.get("approach") as string
   const supabase = createClient()
