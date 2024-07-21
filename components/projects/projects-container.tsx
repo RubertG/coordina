@@ -13,10 +13,10 @@ export const ProjectsContainer = async ({ className }: { className?: string }) =
     </section>
   )
 
-  const {project} = await getProject(projects[0].id)
+  const {project} = await getProject(projects[4].id)
   if (project?.tecnologias) {
-    const bestWorkers = await getBestWorkers(project.tecnologias, projects[0].id)
-    console.log(bestWorkers)
+    const bestWorkers = await getBestWorkers(project.tecnologias, projects[4].id)
+    console.log(bestWorkers.workers)
   }
 
   return (

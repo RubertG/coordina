@@ -2,11 +2,8 @@ import { Database } from "@/types/db/supabase"
 import { createClient } from "./server"
 import { PERCENTAGE_MIN_TECH } from "@/const/workers/workers"
 
-export const getBestWorkers = async (
-  technologies: {
-    tecnologia: Database["public"]["Tables"]["Tecnologia"]["Row"] | null
-  }[],
-  idProject?: string
+export const getBestWorkers = async (technologies: {tecnologia: Database["public"]["Tables"]["Tecnologia"]["Row"] | null}[],
+  idProyecto: string
 ) => {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -18,7 +15,7 @@ export const getBestWorkers = async (
 
   const { data: workers, error } = await supabase
     .from("Trabajador")
-    .select("*, tecnologias:Trabajador_tecnologia(experiencia, tecnologia:Tecnologia(*)), id_proyecto:Proyecto_trabajador(id_proyecto)")
+    .select("*, tecnologias:Trabajador_tecnologia(experiencia, tecnologia:Tecnologia(*))")
     .eq("id_usuario", user.id)
 
   if (error || !workers) return {
@@ -27,57 +24,35 @@ export const getBestWorkers = async (
   }
 
   const minTechs = Math.floor(technologies.length * PERCENTAGE_MIN_TECH)
-  const workersAux = await Promise.all(workers.map(async (worker) => {
-    const { data: workerTechs, error } = await supabase
-      .from("Trabajador_tecnologia")
-      .select("*")
-      .eq("id_trabajador", worker.id)
 
-    if (error || !workerTechs) return {
-      ...worker,
-      techs: 0,
-      totalExperience: 0
-    }
-
-    if (idProject && idProject === worker.id_proyecto[0].id_proyecto) {
-      return {
-        ...worker,
-        techs: 0,
-        totalExperience: 0
-      }
-    }
-
-    // verificar el minimo de tecnologias
+  // Seleccionar trabajadores con el minimo de tecnologias
+  const bestWorkers = workers.map(worker => {
     let techs = 0
     let totalExperience = 0
-    for (const tech of workerTechs) {
-      if (technologies.find((t) => t.tecnologia?.id === tech.id_tecnologia)) {
-        techs++
-        totalExperience += tech.experiencia 
-      } 
-    }
 
-    if (techs < minTechs) return {
-      ...worker,
-      techs: 0,
-      totalExperience: 0
-    }
+    worker.tecnologias.forEach(t => {
+      technologies.forEach(tAux => {
+        if(t.tecnologia?.nombre == tAux.tecnologia?.nombre){
+          techs++
+          totalExperience += t.experiencia
+        }
+      })
+    })
 
-    return {
+    if(techs >= minTechs) return {
       ...worker,
       techs,
       totalExperience
-    } 
-  }))
+    }
+  }).filter(worker => worker != undefined)
 
-  const workersSorted = workersAux.sort((a, b) => {
-    if (a.totalExperience > b.totalExperience) return 1
-    if (a.totalExperience < b.totalExperience) return -1
-    return 0
-  })
+  // No mostrar los que estan en el proyecto
+
+  // Ordenar segun experiencia
+  bestWorkers.sort((a, b) => b.totalExperience - a.totalExperience);
 
   return {
     error: null,
-    workers: workersSorted
+    workers: bestWorkers
   }
 }

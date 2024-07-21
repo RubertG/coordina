@@ -17,6 +17,10 @@ export const CreateProject = async ({ formData, technologies, workers }: Project
     error: "No hay un usuario autenticado"
   }
 
+  if (limitV < workers.length) return {
+    error: "Excedio el limite de trabajadores dado"
+  }
+
   const { error: errorProject,data } = await supabase
     .from("Proyecto")
     .insert({
