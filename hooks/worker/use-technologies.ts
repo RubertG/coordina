@@ -3,7 +3,7 @@
 import { Database } from "@/types/db/supabase"
 import { Technologies } from "@/types/worker"
 import { getTechnologies } from "@/utils/supabase/get-technologies"
-import { deleteTechnologyWorker } from "@/utils/supabase/delete-tecnology-worker"
+import { deleteTechnologyWorker } from "@/utils/supabase/delete-technology-worker"
 import { useEffect, useState } from "react"
 
 interface Props {
