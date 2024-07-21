@@ -11,7 +11,7 @@ export default function Login({
     <div className="h-dvh flex items-center justify-center w-full px-4 md:px-0 max-w-md gap-2 mx-auto">
       <Link
         href="/"
-        className="absolute text-gray-200 left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center text-sm group lg:hover:text-white lg:transition-colors"
+        className="absolute text-gray-200 left-8 top-8 py-2 px-4 rounded-lg no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center text-sm group lg:hover:text-white lg:transition-colors"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +35,8 @@ export default function Login({
           Correo
         </label>
         <input
-          className="rounded-md px-4 py-2 bg-inherit border border-gray-100 mb-6 text-gray-200"
+          type="email"
+          className="rounded-lg px-4 py-2 bg-inherit border border-gray-100 mb-6 text-gray-200"
           name="email"
           placeholder="tunombre@ejemplo.com"
           required
@@ -44,7 +45,7 @@ export default function Login({
           Contraseña
         </label>
         <input
-          className="rounded-md px-4 py-2 bg-inherit border border-gray-100 mb-6 text-gray-200"
+          className="rounded-lg px-4 py-2 bg-inherit border border-gray-100 mb-6 text-gray-200"
           type="password"
           name="password"
           placeholder="••••••••"
@@ -52,14 +53,14 @@ export default function Login({
         />
         <SubmitButton
           formAction={signIn}
-          className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2 lg:hover:bg-green-800 lg:transition-colors"
+          className="bg-green-700 rounded-lg px-4 py-2 text-foreground mb-2 lg:hover:bg-green-800 lg:transition-colors"
           pendingText="Iniciando sesión..."
         >
           Iniciar sesión
         </SubmitButton>
         <SubmitButton
           formAction={signUp}
-          className="border border-gray-100 text-gray-100 rounded-md px-4 py-2 text-foreground lg:hover:bg-gray-100 lg:hover:text-gray-950 lg:transition-colors"
+          className="border border-gray-100 text-gray-100 rounded-lg px-4 py-2 text-foreground lg:hover:bg-gray-100 lg:hover:text-gray-950 lg:transition-colors"
           pendingText="Creando cuenta..."
         >
           Crear cuenta

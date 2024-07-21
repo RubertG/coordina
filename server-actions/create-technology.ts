@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
 
 
-export const CreateWorker = async ({ formData}: TechnologyAction ) => {
+export const CreateTechnology = async ({ formData}: TechnologyAction ) => {
   const name = formData.get("name") as string
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()

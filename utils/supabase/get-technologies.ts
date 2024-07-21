@@ -1,4 +1,4 @@
-import { createClient } from "./server"
+import { createClient } from "./client"
 
 
 export const getTechnologies = async () => {
