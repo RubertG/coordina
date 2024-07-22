@@ -4,12 +4,11 @@ import { ProjectAction } from "@/types/project"
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
 
-
-export const CreateProject = async ({ formData, technologies, workers }: ProjectAction) => {
+export const createProject = async ({ formData, technologies, workers }: ProjectAction) => {
   const name = formData.get("name") as string
   const description = formData.get("description") as string
-  const limit= formData.get("limit") as string
-  const limitV=Number(limit)
+  const limit = formData.get("limit") as string
+  const limitV = Number(limit)
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -21,7 +20,7 @@ export const CreateProject = async ({ formData, technologies, workers }: Project
     error: "Excedio el limite de trabajadores dado"
   }
 
-  const { error: errorProject,data } = await supabase
+  const { error: errorProject, data } = await supabase
     .from("Proyecto")
     .insert({
       nombre: name,
@@ -36,10 +35,10 @@ export const CreateProject = async ({ formData, technologies, workers }: Project
     error: "Error al crear el proyecto"
   }
 
-  const te = technologies.map(({ id: idTech}) => {
+  const te = technologies.map(({ id: idTech }) => {
     return {
-      id_tecnologia:idTech,
-      id_proyecto: data.id 
+      id_tecnologia: idTech,
+      id_proyecto: data.id
     }
   })
 
@@ -51,11 +50,11 @@ export const CreateProject = async ({ formData, technologies, workers }: Project
     error: "Error al crear las tecnologías del proyecto"
   }
 
-  const wo = workers.map(({ id: idWorker,rol}) => {
+  const wo = workers.map(({ id: idWorker, rol }) => {
     return {
-        id_proyecto: data.id,
-        id_trabajador: idWorker,
-        rol: rol
+      id_proyecto: data.id,
+      id_trabajador: idWorker,
+      rol: rol
     }
   })
 
@@ -67,5 +66,5 @@ export const CreateProject = async ({ formData, technologies, workers }: Project
     error: "Error al asignar los integrantes del proyecto"
   }
 
-  return redirect("/proyectos")
+  return redirect("/")
 }

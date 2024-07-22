@@ -1,10 +1,10 @@
 "use client"
 
-import { Technologies } from "@/types/worker"
-import { Popup } from "../common/popup"
+import { useTechnologies } from "@/hooks/projects/use-technologies"
+import { Technologies } from "@/types/project"
 import { Plus, Selector } from "../common/icons"
 import { TechnologyCard } from "./technology-card"
-import { useTechnologies } from "@/hooks/worker/use-technologies"
+import { Popup } from "../common/popup"
 
 interface Props {
   className?: string
@@ -12,12 +12,12 @@ interface Props {
   setTechnologies: React.Dispatch<React.SetStateAction<Technologies[]>>
   defaultTech?: Technologies[]
   setDefaultTech?: React.Dispatch<React.SetStateAction<Technologies[]>>
-  idWorker?: string
+  idProject?: string
 }
 
 export const TechnologiesContainer = ({
   setTechnologies, technologies, className,
-  defaultTech, setDefaultTech, idWorker
+  defaultTech, setDefaultTech, idProject
 }: Props) => {
   const {
     error, handleChange, handlePopup,
@@ -28,7 +28,7 @@ export const TechnologiesContainer = ({
     technologies,
     defaultTech,
     setDefaultTech,
-    idWorker
+    idProject
   })
 
   return (
@@ -46,7 +46,8 @@ export const TechnologiesContainer = ({
           <Plus className="text-gray-300" />
         </button>
       </div>
-      <ul className="flex flex-col gap-2">
+
+      <ul className="flex flex-wrap gap-2 ">
         {
           defaultTech?.map((technology) => (
             <li key={technology.id}>
@@ -85,20 +86,6 @@ export const TechnologiesContainer = ({
                 </select>
                 <Selector className="text-gray-300 absolute z-50 right-3 top-1/2 -translate-y-1/2" />
               </div>
-              <label
-                className="text-white mb-3"
-                htmlFor="experience">
-                Meses de experiencia <span className="text-red-600 font-bold">*</span>
-              </label>
-              <input
-                type="number"
-                className="appearance-none rounded-lg px-4 py-2 bg-inherit border border-gray-100 mb-6 text-gray-200"
-                name="experience"
-                placeholder="0"
-                onChange={handleChange}
-                min={1}
-                required
-              />
               <footer className="flex justify-end gap-5 items-center">
                 <button
                   type="button"

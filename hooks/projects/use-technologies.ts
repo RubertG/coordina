@@ -1,27 +1,26 @@
 "use client"
 
 import { Database } from "@/types/db/supabase"
-import { Technologies } from "@/types/worker"
 import { getTechnologies } from "@/utils/supabase/get-technologies"
-import { deleteTechnologyWorker } from "@/utils/supabase/delete-technology-worker"
 import { useEffect, useState } from "react"
+import { Technologies } from "@/types/project"
+import { deleteTechnologyProject } from "@/utils/supabase/delete-technology-project"
 
 interface Props {
   technologies: Technologies[]
   setTechnologies: React.Dispatch<React.SetStateAction<Technologies[]>>
   defaultTech?: Technologies[]
   setDefaultTech?: React.Dispatch<React.SetStateAction<Technologies[]>>
-  idWorker?: string
+  idProject?: string
 }
 
 export const useTechnologies = ({
-  setTechnologies, technologies, defaultTech, idWorker, setDefaultTech
+  setTechnologies, technologies, defaultTech, idProject, setDefaultTech
 }: Props) => {
   const [popup, setPopup] = useState(false)
   const [techs, setTechs] = useState<Database["public"]["Tables"]["Tecnologia"]["Row"][]>()
-  const [data, setData] = useState<Omit<Technologies, "name">>({
-    id: "",
-    experience: 0
+  const [data, setData] = useState<Omit<Technologies, "nombre">>({
+    id: ""
   })
   const [error, setError] = useState<string>("")
 
@@ -53,16 +52,6 @@ export const useTechnologies = ({
       return
     }
 
-    if (!data.experience) {
-      setError("Debes colocar la experiencia")
-      return
-    }
-
-    if (data.experience < 0) {
-      setError("La experiencia no puede ser negativa o cero")
-      return
-    }
-
     const newTech = techs.find((technology) => technology.id === data.id)
 
     if (!newTech) {
@@ -77,8 +66,7 @@ export const useTechnologies = ({
     setTechnologies([
       ...technologies, {
         id: newTech.id,
-        name: newTech.nombre,
-        experience: data.experience
+        nombre: newTech.nombre
       }
     ])
     setPopup(false)
@@ -93,10 +81,12 @@ export const useTechnologies = ({
   }
 
   const handleDeleteDefaultTech = async (id: string) => {
-    if (!defaultTech || !setDefaultTech || !idWorker) return
+    if (!defaultTech || !setDefaultTech || !idProject) return
 
+    
     setDefaultTech(defaultTech?.filter((technology) => technology.id !== id))
-    await deleteTechnologyWorker(id, idWorker)
+    await deleteTechnologyProject(idProject, id)
+    console.log("object")
   }
 
   const handleDelete = (id: string) => {

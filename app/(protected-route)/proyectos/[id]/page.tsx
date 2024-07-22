@@ -1,6 +1,10 @@
+import { ButtonDelete } from "@/components/projects/button-delete"
 import { WorkersContainer } from "@/components/projects/workers-container"
 import { getProject } from "@/utils/supabase/get-project"
 import Link from "next/link"
+
+export const revalidate = 0
+export const dynamic = "force-dynamic"
 
 export default async function ProjectPage({
   params: { id }
@@ -49,6 +53,7 @@ export default async function ProjectPage({
           className="text-gray-300 lg:hover:text-gray-100 lg:transition-colors">
           Volver
         </Link>
+        <ButtonDelete id={project.id} />
         <Link
           href={`/proyectos/${id}/editar`}
           className="bg-green-700 rounded-lg px-4 py-2 text-foreground lg:hover:bg-green-800 lg:transition-colors">

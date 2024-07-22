@@ -4,8 +4,7 @@ import { ProjectAction } from "@/types/project"
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
 
-
-export const EditProject = async (id: string, { formData, technologies, workers }: ProjectAction) => {
+export const editProject = async (id: string, { formData, technologies, workers }: ProjectAction) => {
   const name = formData.get("name") as string
   const description = formData.get("description") as string
   const limit = formData.get("limit") as string
@@ -66,5 +65,5 @@ export const EditProject = async (id: string, { formData, technologies, workers 
   }
 
 
-  return redirect("/proyectos")
+  return redirect("/")
 }

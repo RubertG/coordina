@@ -1,9 +1,10 @@
 import { Database } from "@/types/db/supabase"
-import { createClient } from "./server"
+import { createClient } from "./client"
 import { PERCENTAGE_MIN_TECH } from "@/const/workers/workers"
 
-export const getBestWorkers = async (technologies: { tecnologia: Database["public"]["Tables"]["Tecnologia"]["Row"] | null }[],
-  idProyecto: string
+export const getBestWorkers = async (
+  technologies: { tecnologia: Database["public"]["Tables"]["Tecnologia"]["Row"] | null }[],
+  idProyecto?: string
 ) => {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -23,7 +24,7 @@ export const getBestWorkers = async (technologies: { tecnologia: Database["publi
     workers
   }
 
-  const minTechs = Math.floor(technologies.length * PERCENTAGE_MIN_TECH)
+  const minTechs = Math.ceil(technologies.length * PERCENTAGE_MIN_TECH)
 
   // Crear un conjunto con los nombres de las tecnologías requeridas para una búsqueda más rápida
   const requiredTechNames = new Set(technologies.map(t => t.tecnologia?.nombre))
@@ -42,9 +43,19 @@ export const getBestWorkers = async (technologies: { tecnologia: Database["publi
     })
 
     // Verificar si el trabajador ya está en el proyecto
-    const inProject = worker.proyectos.some(project => project.id_proyecto === idProyecto)
+    if (idProyecto) {
+      const inProject = worker.proyectos.some(project => project.id_proyecto === idProyecto)
 
-    if (techs >= minTechs && !inProject) {
+      if (techs >= minTechs && !inProject) {
+        return {
+          ...worker,
+          techs,
+          totalExperience
+        }
+      }
+    }
+
+    if (techs >= minTechs) {
       return {
         ...worker,
         techs,
