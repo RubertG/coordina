@@ -55,7 +55,7 @@ export const WorkersSelectedContainer = ({
   return (
     <section className={`p-4 bg-gray-900 rounded-lg ${className}`}>
       <h2 className="text-white mb-3">Selecciona los mejores trabajadores</h2>
-      <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 gap-y-4">
+      <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 gap-y-4">
         {
           selecteds?.map(({ worker, selected }) => {
             return (
