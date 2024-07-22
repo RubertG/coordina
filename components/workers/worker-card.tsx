@@ -8,12 +8,19 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import clsx from "clsx"
 
+type Data = Database["public"]["Tables"]["Trabajador"]["Row"]
+
+interface Worker extends Data {
+  rol?: Database["public"]["Enums"]["Rol"]
+}
+
 interface Props {
-  worker: Database["public"]["Tables"]["Trabajador"]["Row"]
+  worker: Worker
+  canDelete?: boolean
 }
 
 export const WorkerCard = ({
-  worker
+  worker, canDelete = true
 }: Props) => {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -35,18 +42,28 @@ export const WorkerCard = ({
         <p className="text-gray-300">Eliminando...</p>
       </div>
       <div className="overflow-hidden">
-        <h2 className="text-gray-200 font-bold text-lg text-ellipsis overflow-hidden whitespace-nowrap">{worker.nombre}</h2>
-        <p className="text-gray-300 text-sm text-ellipsis overflow-hidden whitespace-nowrap">{worker.enfoque}</p>
+        <h2 className="text-gray-200 font-bold text-lg text-ellipsis overflow-hidden whitespace-nowrap">
+          {worker.nombre}
+        </h2>
+        <p className="text-gray-300 text-sm text-ellipsis overflow-hidden whitespace-nowrap">
+          {worker.enfoque} {worker.rol && (
+            <span>- <span className="text-green-400">{worker.rol}</span></span>
+          )}
+        </p>
       </div>
       <div className="flex flex-col gap-2">
         <Link href={`/trabajadores/editar/${worker.id}`}>
           <Edit className="text-gray-200 w-5 h-5 lg:hover:scale-125 lg:transition-transform" />
         </Link>
-        <button
-          onClick={() => handleDelete(worker.id)}
-          className="lg:hover:scale-125 lg:transition-transform">
-          <Trash className="text-gray-400 w-5 h-5" />
-        </button>
+        {
+          canDelete && (
+            <button
+              onClick={() => handleDelete(worker.id)}
+              className="lg:hover:scale-125 lg:transition-transform">
+              <Trash className="text-gray-400 w-5 h-5" />
+            </button>
+          )
+        }
       </div>
     </li>
   )

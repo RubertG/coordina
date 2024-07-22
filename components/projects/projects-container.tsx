@@ -12,7 +12,7 @@ export const ProjectsContainer = async ({ className }: { className?: string }) =
   )
 
   return (
-    <section className={`flex flex-col gap-1 mx-auto max-w-3xl ${className}`}>
+    <section className={`flex flex-col gap-1 mx-auto ${className}`}>
       {
         projects.map((project) => (
           <Link 
