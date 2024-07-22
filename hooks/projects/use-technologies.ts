@@ -28,7 +28,7 @@ export const useTechnologies = ({
     const fetchTechnologies = async () => {
       const { technologies: t, error } = await getTechnologies()
 
-      if (error || !t) return setTechs([])
+      if (error || t == undefined) return setTechs([])
 
       setTechs(t)
     }
@@ -86,7 +86,6 @@ export const useTechnologies = ({
     
     setDefaultTech(defaultTech?.filter((technology) => technology.id !== id))
     await deleteTechnologyProject(idProject, id)
-    console.log("object")
   }
 
   const handleDelete = (id: string) => {

@@ -67,7 +67,7 @@ export const useEditForm = (idProject: string) => {
 
     const { error, workers } = await getBestWorkers(t)
 
-    if (error || !workers) return
+    if (error || workers == undefined) return
 
     setBestWorkers(workers)
     setLoadingWorkers(false)

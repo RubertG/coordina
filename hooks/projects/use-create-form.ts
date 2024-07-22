@@ -24,7 +24,7 @@ export const useCreateForm = () => {
       }
     })))
 
-    if (error || !workers) return
+    if (error || workers == undefined) return
 
     setBestWorkers(workers)
     setLoadingWorkers(false)

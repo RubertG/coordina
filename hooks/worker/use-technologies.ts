@@ -29,7 +29,7 @@ export const useTechnologies = ({
     const fetchTechnologies = async () => {
       const { technologies: t, error } = await getTechnologies()
 
-      if (error || !t) return setTechs([])
+      if (error || t == undefined) return setTechs([])
 
       setTechs(t)
     }
