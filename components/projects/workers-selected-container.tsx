@@ -1,8 +1,8 @@
 "use client"
 
+import { useWorkersSelected } from "@/hooks/projects/use-workers-selected"
 import { BestWorkers, WorkersStateType } from "@/types/project"
 import clsx from "clsx"
-import { useEffect, useState } from "react"
 
 interface Props {
   className?: string
@@ -36,11 +36,6 @@ const parseTechs = (techs: TechsBestWorkers[]) => {
   return str
 }
 
-interface StateType {
-  worker: BestWorkers
-  selected: boolean
-}
-
 export const WorkersSelectedContainer = ({
   className,
   bestWorkers,
@@ -50,70 +45,24 @@ export const WorkersSelectedContainer = ({
   limit,
   defaultWorkers
 }: Props) => {
-  const [selecteds, setSelecteds] = useState<StateType[]>([])
+  const { handleSelected, saveChanges, selecteds } = useWorkersSelected({
+    bestWorkers, workers, defaultWorkers,
+    limit, setBestWorkers, setWorkers
+  })
 
-  useEffect(() => {
-    const newBestWorkers: StateType[] = []
-    for (const worker of bestWorkers) {
-      if (!workers.some(w => w.id === worker.id) && !defaultWorkers?.some(w => w.id === worker.id)) {
-        newBestWorkers.push({
-          selected: false,
-          worker
-        })
-      }
-    }
-
-    setSelecteds(newBestWorkers)
-  }, [bestWorkers])
-
-  const handleSelected = (worker: BestWorkers) => {
-    setSelecteds(prevState => prevState.map(state => {
-      if (state.worker.id === worker.id) {
-        return {
-          selected: !state.selected,
-          worker
-        }
-      }
-      return state
-    }))
-  }
-
-  const saveChanges = () => {
-    setBestWorkers([])
-    setSelecteds([])
-
-    const newWorkers: WorkersStateType[] = []
-    for (const { selected, worker } of selecteds) {
-      if (limit <= workers.length + (defaultWorkers?.length || 0)) break
-
-      if (limit <= newWorkers.length + (defaultWorkers?.length || 0)) break
-
-      if (selected && !workers.some(w => w.id === worker.id)) {
-        newWorkers.push({
-          id: worker.id,
-          rol: "Integrante",
-          enfoque: worker.enfoque,
-          nombre: worker.nombre,
-          totalExperience: worker.totalExperience
-        })
-      }
-    }
-
-    setWorkers([...workers, ...newWorkers])
-  }
-
-  if (selecteds.length === 0 || selecteds[0].worker.totalExperience === 0) return null
+  if (bestWorkers.length === 0) return null
 
   return (
     <section className={`p-4 bg-gray-900 rounded-lg ${className}`}>
-      <h2 className="text-white mb-3">Selecciona los mejores</h2>
+      <h2 className="text-white mb-3">Selecciona los mejores trabajadores</h2>
       <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 gap-y-4">
         {
           selecteds?.map(({ worker, selected }) => {
             return (
               <li
-                className={clsx("flex gap-2 items-center justify-between px-4 py-2 rounded-lg lg:hover:bg-gray-800 lg:transition-colors border border-gray-900 cursor-pointer", {
-                  "border-gray-200": selected
+                className={clsx("flex gap-2 items-center justify-between px-4 py-2 rounded-lg lg:hover:bg-gray-800 lg:transition-colors border cursor-pointer", {
+                  "border-gray-200": selected,
+                  "border-gray-900": !selected
                 })}
                 onClick={() => handleSelected(worker)}
                 key={worker.id}>
@@ -129,10 +78,19 @@ export const WorkersSelectedContainer = ({
                     {parseTechs(worker.tecnologias)}
                   </p>
                   <p
-                    title={`${worker.enfoque} - ${worker.totalExperience} meses de experiencia`}
+                    title={parseTechs(worker.tecnologias)}
                     className="text-gray-300 text-sm text-ellipsis overflow-hidden whitespace-nowrap">
-                    {worker.enfoque} - {worker.totalExperience} meses de experiencia
+                    Pertenece a {worker.proyectos.length} {worker.proyectos.length === 1 ? "proyecto" : "proyectos"}
                   </p>
+                  {
+                    worker.totalExperience !== 0 && (
+                      <p
+                        title={`${worker.enfoque} - ${worker.totalExperience} meses de experiencia`}
+                        className="text-gray-300 text-sm text-ellipsis overflow-hidden whitespace-nowrap">
+                        {worker.enfoque} - {worker.totalExperience} meses de experiencia
+                      </p>
+                    )
+                  }
                 </div>
               </li>
             )
