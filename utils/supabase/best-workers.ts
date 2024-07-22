@@ -65,10 +65,10 @@ export const getBestWorkers = async (
   }).filter(worker => worker != undefined)
 
   // Ordenar según experiencia
-  bestWorkers.sort((a, b) => b.totalExperience - a.totalExperience)
+  const bW = bestWorkers.sort((a, b) => (b?.totalExperience || 0) - (a?.totalExperience || 0))
 
   return {
     error: null,
-    workers: bestWorkers
+    workers: bW
   }
 }

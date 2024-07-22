@@ -26,7 +26,8 @@ export const useCreateForm = () => {
 
     if (error || workers == undefined) return
 
-    setBestWorkers(workers)
+    const validWorkers = workers.filter((worker): worker is BestWorkers => worker !== undefined)
+    setBestWorkers(validWorkers)
     setLoadingWorkers(false)
   }
 
