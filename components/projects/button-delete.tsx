@@ -16,6 +16,7 @@ export const ButtonDelete = ({ id }: { id: string }) => {
         await deleteProject(id)
         setLoading(false)
         router.push("/")
+        router.refresh()
       }}
     >
       { loading ? "Eliminando..." : "Eliminar" }

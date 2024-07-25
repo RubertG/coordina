@@ -104,6 +104,12 @@ export const WorkersSelectedContainer = ({
         className="bg-green-700 rounded-lg px-4 py-2 text-foreground lg:hover:bg-green-800 lg:transition-colors text-sm mt-4">
         Guardar cambios
       </button>
+      <button
+        type="button"
+        onClick={() => setBestWorkers([])}
+        className="text-gray-300 lg:hover:text-gray-100 lg:transition-colors ml-4">
+        Cancelar
+      </button>
     </section>
   )
 }
